@@ -6,15 +6,20 @@
   <meta name="theme-color" content="#000000">
   <title>Mirror</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     #camera { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); display: none; }
     #permission { position: fixed; inset: 0; display: grid; place-items: center; padding: 28px; text-align: center; background: #000; }
     #permission p { margin: 0 0 20px; font-size: 1.05rem; }
     button { border: 0; border-radius: 999px; padding: 14px 24px; background: #fff; color: #111; font-size: 1rem; font-weight: 700; }
-    #reveal { display: none; position: fixed; inset: auto 0 0; z-index: 2; text-align: center; padding: 90px 22px 30px; background: linear-gradient(transparent, #000e 35%, #000f); font-size: clamp(1.45rem, 6vw, 2rem); font-weight: 750; line-height: 1.2; pointer-events: none; }
-    #reveal small { display: block; margin-top: 12px; color: #ffd0e5; font-size: .9rem; font-weight: 500; }
+    #reveal { display: none; position: fixed; z-index: 2; top: 11%; left: 5%; width: 90%; text-align: left; pointer-events: none; color: #b64e61; font-family: "Caveat", "Segoe Print", "Bradley Hand", cursive; font-size: clamp(2.15rem, 9vw, 4rem); font-weight: 600; line-height: .91; letter-spacing: -.045em; transform: rotate(-5deg); text-shadow: 1px 1px 0 #e39a9d, -1px -1px 1px #642b35, 2px 3px 2px #16090b; filter: saturate(.82); }
+    #reveal .line { display: block; width: max-content; max-width: 100%; }
+    #reveal .line:nth-child(2) { margin-left: 8%; transform: rotate(1.5deg); }
+    #reveal .line:nth-child(3) { margin-left: 2%; transform: rotate(-1deg); }
+    #reveal small { display: block; width: max-content; max-width: 92%; margin: 17px 0 0 18%; color: #c56a78; font-size: clamp(1.15rem, 4.7vw, 1.8rem); font-weight: 500; line-height: 1; letter-spacing: -.02em; transform: rotate(3deg); text-shadow: 1px 1px 0 #e3a0a2, -1px -1px 1px #6a2b35; }
     #error { margin-top: 14px; color: #ffb9b9; font-size: .9rem; }
+    @media (max-width: 380px) { #reveal { top: 9%; left: 4%; width: 92%; font-size: clamp(1.9rem, 9vw, 2.6rem); } }
   </style>
 </head>
 <body>
@@ -26,7 +31,12 @@
     </div>
   </section>
   <video id="camera" autoplay playsinline muted></video>
-  <div id="reveal">The girl in this mirror is <em>way hotter</em> than she appears. 🔥<small>Peer-reviewed by me. No further research needed. 💗</small></div>
+  <div id="reveal" aria-label="The girl in this mirror is way hotter than she appears. Peer-reviewed by me. No further research needed.">
+    <span class="line">The girl in this</span>
+    <span class="line">mirror is way</span>
+    <span class="line">hotter than she appears ♡</span>
+    <small>peer-reviewed by me. no further research needed.</small>
+  </div>
   <script>
     const permission = document.getElementById('permission');
     const allow = document.getElementById('allow');
