@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Mirror</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    #camera { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); display: none; }
+    #permission { position: fixed; inset: 0; display: grid; place-items: center; padding: 28px; text-align: center; background: #000; }
+    #permission p { margin: 0 0 20px; font-size: 1.05rem; }
+    button { border: 0; border-radius: 999px; padding: 14px 24px; background: #fff; color: #111; font-size: 1rem; font-weight: 700; }
+    #next { display: none; position: fixed; right: 20px; bottom: 24px; z-index: 3; }
+    #reveal { display: none; position: fixed; inset: auto 0 0; z-index: 2; text-align: center; padding: 90px 22px 30px; background: linear-gradient(transparent, #000e 35%, #000f); font-size: clamp(1.45rem, 6vw, 2rem); font-weight: 750; line-height: 1.2; }
+    #reveal small { display: block; margin-top: 12px; color: #ffd0e5; font-size: .9rem; font-weight: 500; }
+    #error { margin-top: 14px; color: #ffb9b9; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <section id="permission">
+    <div>
+      <p>Allow camera access to continue.</p>
+      <button id="allow">Continue</button>
+      <div id="error" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+  <video id="camera" autoplay playsinline muted></video>
+  <button id="next">Next →</button>
+  <div id="reveal">The girl in this mirror is <em>way hotter</em> than she appears. 🔥<small>Peer-reviewed by me. No further research needed. 💗</small></div>
+  <script>
+    const permission = document.getElementById('permission');
+    const allow = document.getElementById('allow');
+    const video = document.getElementById('camera');
+    const next = document.getElementById('next');
+    const reveal = document.getElementById('reveal');
+    const error = document.getElementById('error');
+    let stream;
+
+    allow.addEventListener('click', async () => {
+      error.textContent = '';
+      if (!navigator.mediaDevices?.getUserMedia) {
+        error.textContent = 'Camera access requires a supported browser and an HTTPS link.';
+        return;
+      }
+      allow.disabled = true;
+      allow.textContent = 'Opening camera…';
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: 'user' } } });
+        video.srcObject = stream;
+        await video.play();
+        video.style.display = 'block';
+        permission.style.display = 'none';
+        next.style.display = 'block';
+      } catch (e) {
+        allow.disabled = false;
+        allow.textContent = 'Try again';
+        error.textContent = e.name === 'NotAllowedError'
+          ? 'Camera permission was denied. Allow camera access in your browser and try again.'
+          : 'Could not open the camera. Please try again.';
+      }
+    });
+
+    next.addEventListener('click', () => {
+      reveal.style.display = 'block';
+      next.style.display = 'none';
+    });
+
+    window.addEventListener('pagehide', () => {
+      if (stream) stream.getTracks().forEach(track => track.stop());
+    });
+  </script>
+</body>
+</html>
